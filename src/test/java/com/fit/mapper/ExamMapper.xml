@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fit.dao.ExamDao">
+  <resultMap id="BaseResultMap" type="com.fit.entity.Exam">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="class_id" jdbcType="BIGINT" property="classId" />
+    <result column="course" jdbcType="VARCHAR" property="course" />
+    <result column="exam_time" jdbcType="TIMESTAMP" property="examTime" />
+    <result column="full_marks" jdbcType="DECIMAL" property="fullMarks" />
+    <result column="average" jdbcType="DECIMAL" property="average" />
+    <result column="top_mark" jdbcType="DECIMAL" property="topMark" />
+    <result column="lowest_mark" jdbcType="DECIMAL" property="lowestMark" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, class_id, course, exam_time, full_marks, average, top_mark, lowest_mark, remark
+  </sql>
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from exam
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="delete" parameterType="java.lang.Long">
+    delete from exam
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.fit.entity.Exam">
+    insert into exam
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="classId != null">
+        class_id,
+      </if>
+      <if test="course != null">
+        course,
+      </if>
+      <if test="examTime != null">
+        exam_time,
+      </if>
+      <if test="fullMarks != null">
+        full_marks,
+      </if>
+      <if test="average != null">
+        average,
+      </if>
+      <if test="topMark != null">
+        top_mark,
+      </if>
+      <if test="lowestMark != null">
+        lowest_mark,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="classId != null">
+        #{classId,jdbcType=BIGINT},
+      </if>
+      <if test="course != null">
+        #{course,jdbcType=VARCHAR},
+      </if>
+      <if test="examTime != null">
+        #{examTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fullMarks != null">
+        #{fullMarks,jdbcType=DECIMAL},
+      </if>
+      <if test="average != null">
+        #{average,jdbcType=DECIMAL},
+      </if>
+      <if test="topMark != null">
+        #{topMark,jdbcType=DECIMAL},
+      </if>
+      <if test="lowestMark != null">
+        #{lowestMark,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.fit.entity.Exam">
+    update exam
+    <set>
+      <if test="classId != null">
+        class_id = #{classId,jdbcType=BIGINT},
+      </if>
+      <if test="course != null">
+        course = #{course,jdbcType=VARCHAR},
+      </if>
+      <if test="examTime != null">
+        exam_time = #{examTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="fullMarks != null">
+        full_marks = #{fullMarks,jdbcType=DECIMAL},
+      </if>
+      <if test="average != null">
+        average = #{average,jdbcType=DECIMAL},
+      </if>
+      <if test="topMark != null">
+        top_mark = #{topMark,jdbcType=DECIMAL},
+      </if>
+      <if test="lowestMark != null">
+        lowest_mark = #{lowestMark,jdbcType=DECIMAL},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <sql id="Base_Where_List">
+    <where>
+      <if test="id != null and id != ''">
+         and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="classId != null and classId != ''">
+         and class_id = #{classId,jdbcType=BIGINT}
+      </if>
+      <if test="course != null and course != ''">
+         and course = #{course,jdbcType=VARCHAR}
+      </if>
+      <if test="ctime != null ">
+         and exam_time &gt;= #{ctime }
+      </if>
+      <if test="etime != null ">
+         and exam_time &lt;= #{etime } 
+      </if>
+      <if test="fullMarks != null and fullMarks != ''">
+         and full_marks = #{fullMarks,jdbcType=DECIMAL}
+      </if>
+      <if test="average != null and average != ''">
+         and average = #{average,jdbcType=DECIMAL}
+      </if>
+      <if test="topMark != null and topMark != ''">
+         and top_mark = #{topMark,jdbcType=DECIMAL}
+      </if>
+      <if test="lowestMark != null and lowestMark != ''">
+         and lowest_mark = #{lowestMark,jdbcType=DECIMAL}
+      </if>
+      <if test="remark != null and remark != ''">
+         and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+  <select id="findList" parameterType="com.fit.entity.Exam" resultMap="BaseResultMap">
+     select 
+    <include refid="Base_Column_List" />
+     from exam
+    <include refid="Base_Where_List" />
+    order by id desc 
+    <if test="pageNumber != null and pageSize != null">
+     limit ${pageNumber}, ${pageSize}
+	</if>
+  </select>
+  <select id="findCount" resultType="java.lang.Integer">
+    select count(1) from exam
+    <include refid="Base_Where_List" />
+  </select>
+  <select id="get" parameterType="java.util.Map" resultMap="BaseResultMap">
+     select 
+    <include refid="Base_Column_List" />
+     from exam
+     <include refid="Base_Where_List" />
+  </select>
+  <delete id="batchDelete">
+    delete from exam
+     where id in (
+     <foreach collection="array" item="id" separator=",">
+     #{id}
+     </foreach>
+    )
+  </delete>
+  <update id="deleteTable">
+    truncate table exam
+  </update>
+  <select id="selectList" parameterType="java.lang.String" resultMap="BaseResultMap">
+    ${value}
+  </select>
+</mapper>

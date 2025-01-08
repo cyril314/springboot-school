@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fit.dao.StudentMessageDao">
+  <resultMap id="BaseResultMap" type="com.fit.entity.StudentMessage">
+    <id column="id" jdbcType="BIGINT" property="id" />
+    <result column="student_id" jdbcType="BIGINT" property="studentId" />
+    <result column="creat_date" jdbcType="TIMESTAMP" property="creatDate" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, student_id, creat_date, content
+  </sql>
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from student_message
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="delete" parameterType="java.lang.Long">
+    delete from student_message
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.fit.entity.StudentMessage">
+    insert into student_message
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="studentId != null">
+        student_id,
+      </if>
+      <if test="creatDate != null">
+        creat_date,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="studentId != null">
+        #{studentId,jdbcType=BIGINT},
+      </if>
+      <if test="creatDate != null">
+        #{creatDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.fit.entity.StudentMessage">
+    update student_message
+    <set>
+      <if test="studentId != null">
+        student_id = #{studentId,jdbcType=BIGINT},
+      </if>
+      <if test="creatDate != null">
+        creat_date = #{creatDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <sql id="Base_Where_List">
+    <where>
+      <if test="id != null and id != ''">
+         and id = #{id,jdbcType=BIGINT}
+      </if>
+      <if test="studentId != null and studentId != ''">
+         and student_id = #{studentId,jdbcType=BIGINT}
+      </if>
+      <if test="ctime != null ">
+         and creat_date &gt;= #{ctime }
+      </if>
+      <if test="etime != null ">
+         and creat_date &lt;= #{etime } 
+      </if>
+      <if test="content != null and content != ''">
+         and content = #{content,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+  <select id="findList" parameterType="com.fit.entity.StudentMessage" resultMap="BaseResultMap">
+     select 
+    <include refid="Base_Column_List" />
+     from student_message
+    <include refid="Base_Where_List" />
+    order by id desc 
+    <if test="pageNumber != null and pageSize != null">
+     limit ${pageNumber}, ${pageSize}
+	</if>
+  </select>
+  <select id="findCount" resultType="java.lang.Integer">
+    select count(1) from student_message
+    <include refid="Base_Where_List" />
+  </select>
+  <select id="get" parameterType="java.util.Map" resultMap="BaseResultMap">
+     select 
+    <include refid="Base_Column_List" />
+     from student_message
+     <include refid="Base_Where_List" />
+  </select>
+  <delete id="batchDelete">
+    delete from student_message
+     where id in (
+     <foreach collection="array" item="id" separator=",">
+     #{id}
+     </foreach>
+    )
+  </delete>
+  <update id="deleteTable">
+    truncate table student_message
+  </update>
+  <select id="selectList" parameterType="java.lang.String" resultMap="BaseResultMap">
+    ${value}
+  </select>
+</mapper>

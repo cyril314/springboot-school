@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fit.dao.ExamMarkDao">
+  <resultMap id="BaseResultMap" type="com.fit.entity.ExamMark">
+    <id column="student_id" jdbcType="BIGINT" property="studentId" />
+    <result column="student_name" jdbcType="VARCHAR" property="studentName" />
+    <result column="exam_time" jdbcType="TIMESTAMP" property="examTime" />
+    <result column="exam_id" jdbcType="BIGINT" property="examId" />
+    <result column="class_id" jdbcType="BIGINT" property="classId" />
+    <result column="mark" jdbcType="DECIMAL" property="mark" />
+    <result column="rank" jdbcType="INTEGER" property="rank" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    student_id, student_name, exam_time, exam_id, class_id, mark, `rank`, remark
+  </sql>
+  <select id="getById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from exam_mark
+    where student_id = #{studentId,jdbcType=BIGINT}
+  </select>
+  <delete id="delete" parameterType="java.lang.Long">
+    delete from exam_mark
+    where student_id = #{studentId,jdbcType=BIGINT}
+  </delete>
+  <insert id="save" parameterType="com.fit.entity.ExamMark">
+    insert into exam_mark
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="studentId != null">
+        student_id,
+      </if>
+      <if test="studentName != null">
+        student_name,
+      </if>
+      <if test="examTime != null">
+        exam_time,
+      </if>
+      <if test="examId != null">
+        exam_id,
+      </if>
+      <if test="classId != null">
+        class_id,
+      </if>
+      <if test="mark != null">
+        mark,
+      </if>
+      <if test="rank != null">
+        `rank`,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="studentId != null">
+        #{studentId,jdbcType=BIGINT},
+      </if>
+      <if test="studentName != null">
+        #{studentName,jdbcType=VARCHAR},
+      </if>
+      <if test="examTime != null">
+        #{examTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="examId != null">
+        #{examId,jdbcType=BIGINT},
+      </if>
+      <if test="classId != null">
+        #{classId,jdbcType=BIGINT},
+      </if>
+      <if test="mark != null">
+        #{mark,jdbcType=DECIMAL},
+      </if>
+      <if test="rank != null">
+        #{rank,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.fit.entity.ExamMark">
+    update exam_mark
+    <set>
+      <if test="studentName != null">
+        student_name = #{studentName,jdbcType=VARCHAR},
+      </if>
+      <if test="examTime != null">
+        exam_time = #{examTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="examId != null">
+        exam_id = #{examId,jdbcType=BIGINT},
+      </if>
+      <if test="classId != null">
+        class_id = #{classId,jdbcType=BIGINT},
+      </if>
+      <if test="mark != null">
+        mark = #{mark,jdbcType=DECIMAL},
+      </if>
+      <if test="rank != null">
+        `rank` = #{rank,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where student_id = #{studentId,jdbcType=BIGINT}
+  </update>
+  <sql id="Base_Where_List">
+    <where>
+      <if test="studentId != null and studentId != ''">
+         and student_id = #{studentId,jdbcType=BIGINT}
+      </if>
+      <if test="studentName != null and studentName != ''">
+         and student_name = #{studentName,jdbcType=VARCHAR}
+      </if>
+      <if test="ctime != null ">
+         and exam_time &gt;= #{ctime }
+      </if>
+      <if test="etime != null ">
+         and exam_time &lt;= #{etime } 
+      </if>
+      <if test="examId != null and examId != ''">
+         and exam_id = #{examId,jdbcType=BIGINT}
+      </if>
+      <if test="classId != null and classId != ''">
+         and class_id = #{classId,jdbcType=BIGINT}
+      </if>
+      <if test="mark != null and mark != ''">
+         and mark = #{mark,jdbcType=DECIMAL}
+      </if>
+      <if test="rank != null and rank != ''">
+         and `rank` = #{rank,jdbcType=INTEGER}
+      </if>
+      <if test="remark != null and remark != ''">
+         and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+    </where>
+  </sql>
+  <select id="findList" parameterType="com.fit.entity.ExamMark" resultMap="BaseResultMap">
+     select 
+    <include refid="Base_Column_List" />
+     from exam_mark
+    <include refid="Base_Where_List" />
+    order by student_id desc 
+    <if test="pageNumber != null and pageSize != null">
+     limit ${pageNumber}, ${pageSize}
+	</if>
+  </select>
+  <select id="findCount" resultType="java.lang.Integer">
+    select count(1) from exam_mark
+    <include refid="Base_Where_List" />
+  </select>
+  <select id="get" parameterType="java.util.Map" resultMap="BaseResultMap">
+     select 
+    <include refid="Base_Column_List" />
+     from exam_mark
+     <include refid="Base_Where_List" />
+  </select>
+  <delete id="batchDelete">
+    delete from exam_mark
+     where student_id in (
+     <foreach collection="array" item="id" separator=",">
+     #{id}
+     </foreach>
+    )
+  </delete>
+  <update id="deleteTable">
+    truncate table exam_mark
+  </update>
+  <select id="selectList" parameterType="java.lang.String" resultMap="BaseResultMap">
+    ${value}
+  </select>
+</mapper>
